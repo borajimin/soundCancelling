@@ -82,22 +82,22 @@
           analyser_node.fftSize = 2048;
 
           microphone_stream.connect(analyser_node);
-          analyser_node.connect(script_processor_analysis_node);
+          // analyser_node.connect(script_processor_analysis_node);
 
           let buffer_length = analyser_node.frequencyBinCount;
           let array_freq_domain = new Uint8Array(buffer_length);
           let array_time_domain = new Uint8Array(buffer_length);
 
           // console.log("buffer_length " + buffer_length);
+          analyser_node.getByteFrequencyData(array_freq_domain);
+          analyser_node.getByteTimeDomainData(array_time_domain);
 
           script_processor_analysis_node.onaudioprocess = () => {
-            analyser_node.getByteFrequencyData(array_freq_domain);
-            analyser_node.getByteTimeDomainData(array_time_domain);
 
-            // if(microphone_stream.playbackState == microphone_stream.PLAYING_STATE) {
-            //   show_some_data(array_freq_domain, 5, "frequency");
-            //   show_some_data(array_time_domain, 5, "time");
-            // }
+            if(microphone_stream.playbackState == microphone_stream.PLAYING_STATE) {
+              show_some_data(array_freq_domain, 5, "frequency");
+              show_some_data(array_time_domain, 5, "time");
+            }
           };
         };
         if(!navigator.getUserMedia) {
